@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <!-- Form's field for article's create or edit view -->
+    <fields name="addon">
+        <fields name="form_builder">
+            <fieldset addfieldpath="/administrator/components/com_tz_portfolio_plus/models/fields" name="basic">
+                <field type="text" name="title"
+                       label="COM_TZ_PORTFOLIO_PLUS_LABEL_TITLE"/>
+                <field type="list" name="title_element" default="h3" showon="title!:"
+                       label="TZPORTFOLIO_ADDON_HTML_ELEMENT">
+                    <option value="h1">h1</option>
+                    <option value="h2">h2</option>
+                    <option value="h3">h3</option>
+                    <option value="h4">h4</option>
+                    <option value="h5">h5</option>
+                    <option value="h6">h6</option>
+                </field>
+                <field type="tzfont" name="title_font" default="" showon="title!:"
+                       label="TZPORTFOLIO_ADDON_TITLE_FONT">
+                </field>
+                <field type="color" name="title_color" default="" format="rgba" showon="title!:"
+                       label="TZPORTFOLIO_ADDON_TITLE_COLOR">
+                </field>
+                <field type="color" name="title_color_hover" default="" format="rgba" showon="title!:"
+                       label="TZPORTFOLIO_ADDON_TITLE_COLOR_HOVER">
+                </field>
+                <field type="number" name="title_margin_top" showon="title!:"
+                       label="TZPORTFOLIO_ADDON_TITLE_MARGIN_TOP"/>
+                <field type="number" name="title_margin_bottom" showon="title!:"
+                       label="TZPORTFOLIO_ADDON_TITLE_MARGIN_BOTTOM"/>
+
+                <field type="spacer" name="spacer_addon_email_hr" hr="true"/>
+                <field name="email_options_note" type="note" label="TZPORTFOLIO_ADDON_FORMBUILDER_EMAIL_OPTIONS" />
+
+                <field type="text" name="recipient_name" default=""
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_RECIPIENT_NAME" />
+                <field type="textarea" name="recipient_description"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_RECIPIENT_DESCRIPTION" rows="5" />
+                <field name="recipient_image" label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_RECIPIENT_AVATAR" type="media" />
+                <field name="recipient_contact_options" type="subform" label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_CONTACT_OPTIONS_LABEL" multiple="true">
+                    <form>
+                        <field name="contact_text" label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_CONTACT_TEXT_LABEL" description="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_CONTACT_TEXT_DESC" type="text" />
+                        <field name="contact_icon" label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_CONTACT_ICON_LABEL" description="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_CONTACT_ICON_DESC" type="text" />
+                    </form>
+                </field>
+                <field type="text" name="recipient_email" default=""
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_RECIPIENT_EMAIL" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_RECIPIENT_EMAIL_DESC" />
+                <field type="textarea" name="email_headers" default="Reply-To: {{email}}&#13;&#10;Reply-name: {{first-name}} {{last-name}}&#13;&#10;Cc: {{email}}!"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_EMAIL_HEADERS" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_EMAIL_HEADERS_DESC" rows="5" />
+                <field type="text" name="from_email" default=""
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_FROM_EMAIL" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_FROM_EMAIL_DESC" />
+                <field type="text" name="email_subject" default="{{subject}} | {{site-name}}"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_EMAIL_SUBJECT" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_EMAIL_SUBJECT_DESC" />
+                <field type="textarea" name="email_body" default="&lt;p&gt;&lt;strong&gt;From:&lt;/strong&gt;{{first-name}} {{last-name}}&lt;/p&gt;&#13;&#10;&lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt;{{email}}&lt;/p&gt;&#13;&#10;&lt;p&gt;&lt;strong&gt;Subject:&lt;/strong&gt;{{subject}}&lt;/p&gt;&#13;&#10;&lt;p&gt;&lt;strong&gt;Message:&lt;/strong&gt;{{message}}&lt;/p&gt;"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_EMAIL_BODY" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_EMAIL_BODY_DESC" rows="5" />
+
+                <field type="spacer" name="spacer_addon_message_hr" hr="true"/>
+                <field name="message_options_note" type="note" label="TZPORTFOLIO_ADDON_MESSAGE_OPTIONS" />
+
+                <field type="text" name="success_message" default="Email successfully sent!"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_SUCCESS_MESSAGE" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_SUCCESS_MESSAGE_DESC" />
+                <field type="text" name="failed_message" default="Email sent failed, fill required field and try again!"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_FAILED_MESSAGE" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_FAILED_MESSAGE_DESC" />
+
+                <field type="spacer" name="spacer_addon_redirect_hr" hr="true"/>
+                <field name="redirect_options_note" type="note" label="TZPORTFOLIO_ADDON_REDIRECT_OPTIONS" />
+
+                <field type="list" name="enable_redirect" default="0"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_ENABLE_REDIRECT">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field type="text" name="redirect_url" showon="enable_redirect:1"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_REDIRECT_URL" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_REDIRECT_URL_DESC" />
+
+                <field type="list" name="enable_captcha" default="0"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_ENABLE_CAPTCHA">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field type="list" name="captcha_type" default="recaptcha" showon="enable_captcha:1"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_CAPTCHA_TYPE" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_CAPTCHA_DESC">
+                    <option value="default">default</option>
+                    <option value="recaptcha">reCaptcha</option>
+                    <option value="invisible-recaptcha">Invisible reCaptcha</option>
+                </field>
+
+                <field type="spacer" name="spacer_addon_form_builder_button_hr" hr="true"/>
+                <field name="form_builder_button_options_note" type="note" label="TZPORTFOLIO_ADDON_BUTTON_OPTIONS" />
+
+                <field type="text" name="submit_class"
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_SUBMIT_CLASS" description="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_SUBMIT_CLASS_DESC" />
+                <field type="tzpadding" name="form_builder_submit_padding" default=""
+                       label="TZPORTFOLIO_ADDON_PADDING">
+                </field>
+
+                <field type="spacer" name="spacer_addon_general_hr" hr="true"/>
+                <field name="general_options_note" type="note" label="TZPORTFOLIO_ADDON_GENERAL_OPTIONS" />
+
+                <field type="tzmargin" name="form_builder_margin" default=""
+                       label="TZPORTFOLIO_ADDON_MARGIN">
+                </field>
+                <field type="text" name="custom_class"
+                       label="TZPORTFOLIO_ADDON_CONTENT_CLASS"/>
+                <field type="spacer" name="spacer_addon_form_builder_items_hr" hr="true"/>
+                <field name="form_builder_item_note" type="note" label="TZPORTFOLIO_ADDON_VALUE_ITEMS" />
+                <field type="list" name="gutter" default=""
+                       label="TZPORTFOLIO_ADDON_CONTENT_FORM_BUILDER_GUTTER">
+                    <option value="">Default</option>
+                    <option value="gx-1">X-Small</option>
+                    <option value="gx-2">Small</option>
+                    <option value="gx-3">Medium</option>
+                    <option value="gx-4">Large</option>
+                    <option value="gx-5">X-Large</option>
+                </field>
+                <field name="form_builder_items" type="subform" formsource="components/com_tz_portfolio_plus/addons/content/form_builder/admin/models/forms/form_builder_item.xml" multiple="true" label="TZPORTFOLIO_ADDON_LEADER_ADD_ITEM" />
+            </fieldset>
+        </fields>
+    </fields>
+    <!-- End form's field for article's create or edit view -->
+</form>

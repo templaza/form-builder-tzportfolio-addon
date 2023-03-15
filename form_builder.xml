@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="tz_portfolio_plus-plugin" group="content" method="upgrade">
+    <name>plg_content_form_builder</name>
+    <author>Sonny</author>
+    <creationDate>January 2023</creationDate>
+    <copyright>Copyright (C) 2015-2023 TZ Portfolio. All rights reserved.</copyright>
+    <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
+    <authorEmail>support@templaza.com</authorEmail>
+    <authorUrl>www.templaza.com/</authorUrl>
+    <version>1.0.0</version>
+    <description>PLG_CONTENT_FORM_BUILDER_XML_DESCRIPTION</description>
+
+    <files>
+        <filename plugin="form_builder">form_builder.php</filename>
+        <filename>controller.php</filename>
+        <filename>index.html</filename>
+        <folder>admin</folder>
+        <folder>css</folder>
+        <folder>fonts</folder>
+        <folder>language</folder>
+        <folder>models</folder>
+        <folder>modules</folder>
+        <folder>tmpl</folder>
+        <folder>views</folder>
+    </files>
+
+    <config>
+        <fields name="params" addfieldpath="administrator/components/com_tz_portfolio_plus/models/fields">
+            <!-- Parameters for back-end -->
+            <fieldset name="basic">
+            </fieldset>
+            <!-- End parameters for back-end -->
+
+            <!-- Parameters for front-end -->
+            <fieldset name="front_end"
+                      label="PLG_CONTENT_FORM_BUILDER_FRONT_END_FIELDSET_LABEL"
+                      description="PLG_CONTENT_FORM_BUILDER_CONFIG_SETTINGS_DESC">
+                <!-- Start article view options -->
+                <field type="spacer" name="spacer_form_builder_article_hr" hr="true"/>
+                <field type="spacer" name="spacer_form_builder_article_name"
+                       class="alert alert-warning btn-block"
+                       label="COM_TZ_PORTFOLIO_PLUS_ATTRIBS_FIELDSET_LABEL"/>
+                <field type="radio" name="form_builder_show"
+                       default="1" class="switcher btn-group"
+                       label="PLG_CONTENT_FORM_BUILDER_SHOW_LABEL"
+                       description="PLG_CONTENT_FORM_BUILDER_SHOW_LABEL">
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <!-- End article view options -->
+            </fieldset>
+            <!-- End parameters for front-end -->
+        </fields>
+    </config>
+</extension>

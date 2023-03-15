@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <!-- Form's field for article's create or edit view -->
+    <fieldset addfieldpath="/administrator/components/com_tz_portfolio_plus/models/fields" name="basic">
+        <!-- FIELDS FOR IMAGES -->
+        <field type="list" name="type" default="text"
+               label="TZPORTFOLIO_ADDON_BACKGROUND_COLOR">
+            <option value="text">Text</option>
+            <option value="email">Email</option>
+            <option value="phone">Phone</option>
+            <option value="textarea">Textarea</option>
+            <option value="radio">Radio</option>
+            <option value="checkbox">Checkbox</option>
+            <option value="select">Select</option>
+            <option value="date">Date</option>
+            <option value="range">Range</option>
+            <option value="number">Number</option>
+        </field>
+        <field type="text" name="field_label"
+               label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDLABEL_LABEL"/>
+        <field type="text" name="field_name"
+               label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDNAME_LABEL" description="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDNAME_DESC" />
+        <field type="text" name="field_placeholder"
+               label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDPLACEHOLDER_LABEL" showon="type:text[OR]type:email[OR]type:phone[OR]type:textarea" />
+        <field type="text" name="field_min"
+               label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDMIN_LABEL" showon="type:range[OR]type:number" />
+        <field type="text" name="field_max"
+               label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDMAX_LABEL" showon="type:range[OR]type:number" />
+        <field type="text" name="field_step"
+               label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDSTEP_LABEL" showon="type:range[OR]type:number" />
+        <field type="radio" name="field_required"
+               default="0"
+               label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDREQUIRED_LABEL">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field showon="type:radio[OR]type:checkbox[OR]type:select" name="field_options" type="subform" label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDOPTION_LABEL" multiple="true">
+            <form>
+                <field name="opt_value" label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_OPTION_VALUE_LABEL" description="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_FIELDNAME_DESC" type="text" />
+                <field name="opt_text" label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_OPTION_TEXT_LABEL" type="text" />
+                <field name="opt_required" type="radio" default="0" label="COM_TZ_PORTFOLIO_PLUS_FORMBUILDER_OPTION_REQUIRED_LABEL">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+            </form>
+        </field>
+        <field type="list" name="column_lg" default="2"
+               label="TZPORTFOLIO_ADDON_COLUMN_LG">
+            <option value="1">1/1</option>
+            <option value="2">1/2</option>
+            <option value="3">1/3</option>
+            <option value="4">1/4</option>
+            <option value="6">1/6</option>
+        </field>
+        <field type="list" name="column_md" default="2"
+               label="TZPORTFOLIO_ADDON_COLUMN_MD">
+            <option value="1">1/1</option>
+            <option value="2">1/2</option>
+            <option value="3">1/3</option>
+            <option value="4">1/4</option>
+            <option value="6">1/6</option>
+        </field>
+        <field type="list" name="column_sm" default="1"
+               label="TZPORTFOLIO_ADDON_COLUMN_SM">
+            <option value="1">1/1</option>
+            <option value="2">1/2</option>
+            <option value="3">1/3</option>
+            <option value="4">1/4</option>
+            <option value="6">1/6</option>
+        </field>
+        <field type="list" name="column" default="1"
+               label="TZPORTFOLIO_ADDON_COLUMN_XS">
+            <option value="1">1/1</option>
+            <option value="2">1/2</option>
+            <option value="3">1/3</option>
+            <option value="4">1/4</option>
+            <option value="6">1/6</option>
+        </field>
+    </fieldset>
+    <!-- End form's field for article's create or edit view -->
+</form>
