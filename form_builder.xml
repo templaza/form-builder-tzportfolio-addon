@@ -2,12 +2,12 @@
 <extension version="3.0" type="tz_portfolio_plus-plugin" group="content" method="upgrade">
     <name>plg_content_form_builder</name>
     <author>Sonny</author>
-    <creationDate>January 2023</creationDate>
+    <creationDate>October 2023</creationDate>
     <copyright>Copyright (C) 2015-2023 TZ Portfolio. All rights reserved.</copyright>
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <description>PLG_CONTENT_FORM_BUILDER_XML_DESCRIPTION</description>
 
     <files>
