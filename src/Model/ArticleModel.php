@@ -1,46 +1,116 @@
 <?php
 /*------------------------------------------------------------------------
 
-# Music Addon
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2016 tzportfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
 # Website: http://www.tzportfolio.com
 
-# Technical Support:  Forum - http://tzportfolio.com/forum
+# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
 
 # Family website: http://www.templaza.com
 
+# Family Support: Forum - https://www.templaza.com/Forums.html
+
 -------------------------------------------------------------------------*/
 
-// No direct access
+namespace TemPlaza\Component\TZ_Portfolio\AddOn\Content\Form_builder\Site\Model;
+
+// No direct access.
 defined('_JEXEC') or die;
 
-class PlgTZ_Portfolio_PlusContentForm_BuilderModelArticle extends TZ_Portfolio_PlusPluginModelItem
-{
-    public function getForm_BuilderItems(){
-        if($model  = JModelLegacy::getInstance('Form_Builder','PlgTZ_Portfolio_PlusContentModel',
-            array('ignore_request' => true))) {
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Session\Session;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnItemModel;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 
-            $params = $this -> getState('params');
-            $model->setState('params', $params);
-            $model->setState('filter.content_id', $this->article->id);
-            $items  =   $model -> getItems();
-            $mainframe =JFactory::getApplication();
-            $tzformbuilder = $mainframe->input->get('tzportfolio-form-builder-', array(), 'RAW');
-            if (!empty(($tzformbuilder)) && isset($items[0]->value)) {
-                $this->_FormBuilder_Ajax($tzformbuilder, $items[0]->value);
-            }
+class ArticleModel extends AddOnItemModel {
+    protected function populateState($ordering = null, $direction = null)
+    {
+        $app = Factory::getApplication();
+        $input = $app->input;
 
-            return $items;
+        $this->setState('filter.catid', null);
+        $this->setState('filter.content_id', null);
+
+        parent::populateState($ordering, $direction);
+
+    }
+    protected function getStoreId($id = '')
+    {
+        // Add the list state to the store id.
+        $id .= ':' . $this->getState('list.start');
+        $id .= ':' . $this->getState('list.limit');
+        $id .= ':' . $this->getState('filter.content_id');
+        $id .= ':' . serialize($this->getState('filter.catid'));
+        $id .= ':' . $this->getState('list.ordering');
+        $id .= ':' . $this->getState('list.direction');
+
+        return md5($this->context . ':' . $id);
+    }
+
+    protected function getListQuery()
+    {
+        $db = $this->getDatabase();
+        $query = $db->getQuery(true);
+        $query->select('DISTINCT d.*');
+        $query->from($db->quoteName('#__tz_portfolio_plus_addon_data').' AS d');
+        $query -> join('INNER', '#__tz_portfolio_plus_content AS c ON c.id = d.content_id');
+        $query ->join('INNER', '#__tz_portfolio_plus_content_category_map AS cm ON cm.contentid = c.id');
+        $query ->join('INNER', '#__tz_portfolio_plus_categories AS cc ON cc.id = cm.catid');
+        $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.id = d.extension_id');
+
+        if($addon = AddonHelper::getPlugin('content', 'form_builder')) {
+            $query->where('d.extension_id =' .(int) $addon -> id);
         }
-        return false;
+        $query -> where('d.element ='.$db -> quote('form_builder'));
+
+        if($content_id = $this -> getState('filter.content_id')){
+            $query -> where('d.content_id = '.$content_id);
+        }
+        $query -> where('d.published = 1');
+
+        if($catid = $this -> getState('filter.catid', null)) {
+            if(is_array($catid)){
+                $query -> where('cc.id IN('.implode(',', $catid).')');
+            }else{
+                $query -> where('cc.id = '.(int) $catid);
+            }
+        }
+        return $query;
+    }
+
+    public function getAddonData()
+    {
+        $query = $this->getListQuery();
+        $db = $this->getDatabase();
+        $db->setQuery($query);
+        return $db->loadObject();
+    }
+
+    public function getForm()
+    {
+        $params = $this -> getState('params');
+        $this->setState('params', $params);
+        $this->setState('filter.content_id', $this->article->id);
+        $addon  =   $this -> getAddonData();
+        $mainframe =Factory::getApplication();
+        $tzformbuilder = $mainframe->input->get('tzportfolio-form-builder-', array(), 'RAW');
+        if (!empty(($tzformbuilder)) && isset($addon->value)) {
+            $this->_FormBuilder_Ajax($tzformbuilder, $addon->value);
+        }
+
+        return $addon;
     }
 
     private function _FormBuilder_Ajax($tzformbuilder, $items) {
@@ -50,13 +120,13 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderModelArticle extends TZ_Portfolio_P
         try {
             // Check for request forgeries.
             // if cache isn't enable
-            if( !\JFactory::getConfig()->get('caching') && !JPluginHelper::getPlugin('system', 'cache') ) {
+            if( !Factory::getApplication()->getConfig()->get('caching') && !PluginHelper::getPlugin('system', 'cache') ) {
                 // Check CSRF
-                if (!\JSession::checkToken()) {
-                    throw new \Exception(\JText::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR'));
+                if (!Session::checkToken()) {
+                    throw new \Exception(Text::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR'));
                 }
             }
-            $mail = JFactory::getMailer();
+            $mail = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
             $message = $items->email_body;
             $gcaptcha= '';
 
@@ -73,27 +143,26 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderModelArticle extends TZ_Portfolio_P
             if (intval($items->enable_captcha)) {
                 if ($items->captcha_type == 'recaptcha' || $items->captcha_type == 'recaptcha_invisible') {
                     if($gcaptcha == ''){
-                        throw new \Exception(\JText::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR_INVALID_CAPTCHA'));
+                        throw new \Exception(Text::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR_INVALID_CAPTCHA'));
                     } else {
                         if($items->captcha_type == 'recaptcha_invisible') {
-                            JPluginHelper::importPlugin('captcha', 'recaptcha_invisible');
+                            PluginHelper::importPlugin('captcha', 'recaptcha_invisible');
                         } else {
-                            JPluginHelper::importPlugin('captcha', 'recaptcha');
+                            PluginHelper::importPlugin('captcha', 'recaptcha');
                         }
-                        $dispatcher = JEventDispatcher::getInstance();
-                        $res = $dispatcher->trigger('onCheckAnswer', $gcaptcha);
+                        $res = Factory::getApplication()->triggerEvent('onCheckAnswer', [$gcaptcha]);
 
                         if (!$res[0]) {
-                            throw new \Exception(\JText::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR_INVALID_CAPTCHA'));
+                            throw new \Exception(Text::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR_INVALID_CAPTCHA'));
                         }
                     }
                 } else {
-                    $mainframe =JFactory::getApplication();
+                    $mainframe =Factory::getApplication();
                     $value1 =   intval($mainframe->getUserState( "tzportfolio-formbuilder-recaptcha.value1" ));
                     $value2 =   intval($mainframe->getUserState( "tzportfolio-formbuilder-recaptcha.value2" ));
                     $value_result = intval($mainframe->input->get('tzportfolio-form-captcha', 0));
                     if ( $value1 + $value2 != $value_result) {
-                        throw new \Exception(\JText::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR_INVALID_CAPTCHA'));
+                        throw new \Exception(Text::_('TZPORTFOLIO_FORMBUILDER_AJAX_ERROR_INVALID_CAPTCHA'));
                     }
                 }
             }
@@ -113,9 +182,9 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderModelArticle extends TZ_Portfolio_P
             }, $mail_subject);
             // Message structure
             $mail_body =  $message;
-            $mail_body .= '<p><strong>' . JText::_('TZPORTFOLIO_FORMBUILDER_SENDER_IP'). '</strong>: ' . $senderip .'</p>';
+            $mail_body .= '<p><strong>' . Text::_('TZPORTFOLIO_FORMBUILDER_SENDER_IP'). '</strong>: ' . $senderip .'</p>';
 
-            $config = JFactory::getConfig();
+            $config = Factory::getApplication()->getConfig();
 
             $sender = array( $config->get( 'mailfrom' ), $config->get( 'fromname' ) );
             $recipient = $config->get( 'mailfrom' );
@@ -172,8 +241,8 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderModelArticle extends TZ_Portfolio_P
             $mail->Encoding = 'base64';
             $mail->setBody($mail_body);
 
-            $message_success    =   isset($items->success_message) && $items->success_message ? $items->success_message : \JText::_('TZPORTFOLIO_FORMBUILDER_SENT_SUCCESSFULLY');
-            $message_failed     =   isset($items->failed_message) && $items->failed_message ? $items->failed_message : \JText::_('TZPORTFOLIO_FORMBUILDER_SENT_MAIL_FAILED');
+            $message_success    =   isset($items->success_message) && $items->success_message ? $items->success_message : Text::_('TZPORTFOLIO_FORMBUILDER_SENT_SUCCESSFULLY');
+            $message_failed     =   isset($items->failed_message) && $items->failed_message ? $items->failed_message : Text::_('TZPORTFOLIO_FORMBUILDER_SENT_MAIL_FAILED');
 
             if ($mail->Send()) {
                 $return["status"]   =   'success';

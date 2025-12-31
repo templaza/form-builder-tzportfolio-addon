@@ -1,45 +1,56 @@
 <?php
 /*------------------------------------------------------------------------
 
-# Form_Builder Addon
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
-# author    Sonny
+# Author:    DuongTVTemPlaza
 
-# copyright Copyright (C) 2021 templaza.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
-# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+# @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Websites: http://www.tzportfolio.com
+# Website: http://www.tzportfolio.com
 
 # Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
 
+# Family website: http://www.templaza.com
+
+# Family Support: Forum - https://www.templaza.com/Forums.html
+
 -------------------------------------------------------------------------*/
+
+namespace TemPlaza\Component\TZ_Portfolio\AddOn\Content\Form_builder\Site\View\Article;
 
 // No direct access.
 defined('_JEXEC') or die;
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
 
-class PlgTZ_Portfolio_PlusContentForm_BuilderViewArticle extends JViewLegacy{
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Filesystem\File;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\WebAsset\WebAssetManager;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioUri;
+use TemPlaza\Component\TZ_Portfolio\Site\Helper\ArticleHelper;
 
-    protected $item             = null;
-    protected $params           = null;
+/**
+ * Categories view class for the Category package.
+ */
+class HtmlView extends BaseHtmlView
+{
+    protected $item     = null;
+    protected $params   = null;
+    protected $head     = array();
     protected $form_builder          = null;
-    protected $head             = false;
 
     public function display($tpl = null){
-        $this -> item   = $this -> get('Item');
-        $this -> items   = $this -> get('Form_BuilderItems');
-        $state          = $this -> get('State');
-        $params         = $state -> get('params');
-        $this -> params = $params;
-        if(isset($this -> items) && $this -> items) {
-            foreach ($this->items as $_item) {
-                $this->form_builder  =   $_item -> value;
-                $this->styleInit($_item -> value);
-            }
-        }
+        $model = $this->getModel();
+        $this -> items          = $model -> getForm();
+        $this -> params         = $model -> getState('params');
+        $this->form_builder  =   json_decode($this -> items-> value);
+        $this->styleInit($this->form_builder);
+
         parent::display($tpl);
     }
 
@@ -53,7 +64,7 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderViewArticle extends JViewLegacy{
 
         $title_style    =   '';
         if (isset($item->title_font) && $item->title_font) {
-            $title_style     .=      TZ_Portfolio_PlusContentHelper::font_style($item->title_font);
+            $title_style     .=      ArticleHelper::font_style($item->title_font);
         }
         if ($title_margin_top) {
             $title_style    .=  'margin-top:'.$title_margin_top.'px !important;';
@@ -84,7 +95,7 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderViewArticle extends JViewLegacy{
         $addon_margin_sm = "";
         $addon_margin_xs = "";
         if (isset($item->form_builder_margin) && trim($item->form_builder_margin)) {
-            $margin             =   TZ_Portfolio_PlusContentHelper::padding_margin($item->form_builder_margin, 'margin');
+            $margin             =   ArticleHelper::padding_margin($item->form_builder_margin, 'margin');
             if ($margin) {
                 $addon_margin       .=  $margin->md;
                 $addon_margin_sm    .=  $margin->sm;
@@ -118,7 +129,7 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderViewArticle extends JViewLegacy{
         $button_padding_xs = '';
 
         if (isset($item->form_builder_submit_padding) && trim($item->form_builder_submit_padding)) {
-            $padding      =   TZ_Portfolio_PlusContentHelper::padding_margin($item->form_builder_submit_padding, 'padding');
+            $padding      =   ArticleHelper::padding_margin($item->form_builder_submit_padding, 'padding');
             if ($padding) {
                 $button_padding       .=  $padding->md;
                 $button_padding_sm    .=  $padding->sm;
@@ -146,11 +157,12 @@ class PlgTZ_Portfolio_PlusContentForm_BuilderViewArticle extends JViewLegacy{
                 }
             }
         }
+        $doc = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $doc->registerAndUseStyle('tzportfolio.content.form_builder', 'components/com_tz_portfolio/add-ons/content/form_builder/css/style.css');
+        if ($css) {
+            $doc->addInlineStyle($css);
+        }
+        $doc->registerAndUseScript('tzportfolio.content.form_builder', 'components/com_tz_portfolio/add-ons/content/form_builder/js/script.js');
 
-        $doc = JFactory::getDocument();
-        $doc->addStyleSheet('components/com_tz_portfolio_plus/addons/content/form_builder/css/style.css');
-        $doc->addStyleDeclaration($css);
-        $doc->addScript('components/com_tz_portfolio_plus/addons/content/form_builder/js/script.js');
     }
-
 }

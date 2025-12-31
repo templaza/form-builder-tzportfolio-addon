@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <!-- Form's field for article's create or edit view -->
-    <fields name="addon">
+    <fields name="content">
         <fields name="form_builder">
-            <fieldset addfieldpath="/administrator/components/com_tz_portfolio_plus/models/fields" name="basic">
+            <fieldset name="form_builder_basic" addfieldprefix="TemPlaza\Component\TZ_Portfolio\Administrator\Field">
                 <field type="text" name="title"
-                       label="COM_TZ_PORTFOLIO_PLUS_LABEL_TITLE"/>
+                       label="COM_TZ_PORTFOLIO_LABEL_TITLE"/>
                 <field type="list" name="title_element" default="h3" showon="title!:"
                        label="TZPORTFOLIO_ADDON_HTML_ELEMENT">
                     <option value="h1">h1</option>
@@ -113,7 +113,7 @@
                     <option value="gx-4">Large</option>
                     <option value="gx-5">X-Large</option>
                 </field>
-                <field name="form_builder_items" type="subform" formsource="components/com_tz_portfolio_plus/addons/content/form_builder/admin/models/forms/form_builder_item.xml" multiple="true" label="TZPORTFOLIO_ADDON_LEADER_ADD_ITEM" />
+                <field name="form_builder_items" type="subform" formsource="components/com_tz_portfolio/add-ons/content/form_builder/admin/forms/form_builder_item.xml" multiple="true" label="TZPORTFOLIO_ADDON_LEADER_ADD_ITEM" />
             </fieldset>
         </fields>
     </fields>

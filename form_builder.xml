@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.0" type="tz_portfolio_plus-plugin" group="content" method="upgrade">
+<extension version="4.1" type="tz_portfolio-addon" group="content" method="upgrade">
     <name>plg_content_form_builder</name>
     <author>Sonny</author>
-    <creationDate>October 2023</creationDate>
+    <creationDate>December 2025</creationDate>
     <copyright>Copyright (C) 2015-2023 TZ Portfolio. All rights reserved.</copyright>
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <description>PLG_CONTENT_FORM_BUILDER_XML_DESCRIPTION</description>
-
+    <tpTargetPlatforms>
+        <tpTargetPlatform name="com_tz_portfolio" version="4.*"/>
+    </tpTargetPlatforms>
+    <namespace path="src/">TemPlaza\Component\TZ_Portfolio\AddOn\Content\Form_builder</namespace>
     <files>
-        <filename plugin="form_builder">form_builder.php</filename>
-        <filename>controller.php</filename>
-        <filename>index.html</filename>
+        <folder addon="form_builder">services</folder>
         <folder>admin</folder>
         <folder>css</folder>
-        <folder>fonts</folder>
         <folder>js</folder>
         <folder>language</folder>
-        <folder>models</folder>
-        <folder>modules</folder>
+        <folder>services</folder>
+        <folder>src</folder>
         <folder>tmpl</folder>
-        <folder>views</folder>
     </files>
 
     <config>
-        <fields name="params" addfieldpath="administrator/components/com_tz_portfolio_plus/models/fields">
-            <!-- Parameters for back-end -->
-            <fieldset name="basic">
-            </fieldset>
-            <!-- End parameters for back-end -->
-
+        <fields name="params">
             <!-- Parameters for front-end -->
             <fieldset name="front_end"
                       label="PLG_CONTENT_FORM_BUILDER_FRONT_END_FIELDSET_LABEL"

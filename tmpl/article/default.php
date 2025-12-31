@@ -1,28 +1,30 @@
 <?php
 /*------------------------------------------------------------------------
 
-# Form_Builder Addon
+# TZ Portfolio Plus Extension
 
 # ------------------------------------------------------------------------
 
-# author    Sonny
+# author    DuongTVTemPlaza
 
-# copyright Copyright (C) 2021 templaza.com. All Rights Reserved.
+# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
 
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Websites: http://www.tzportfolio.com
+# Websites: http://www.templaza.com
 
-# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+# Technical Support:  Forum - http://templaza.com/Forum
 
 -------------------------------------------------------------------------*/
 
 // No direct access.
 defined('_JEXEC') or die;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 $params = $this->params;
 if ($params->get('form_builder_show',1)) {
+
     if (isset($this->form_builder) && $form_builder = $this->form_builder) {
         if (isset($form_builder->form_builder_items) && is_object($form_builder->form_builder_items))  {
             //Title
@@ -72,26 +74,26 @@ if ($params->get('form_builder_show',1)) {
                 $column[]   =   (isset($form_builder_item->column_sm) && $form_builder_item->column_sm) ? 'col-sm-' . 12/$form_builder_item->column_sm : 'col-sm-12';
                 $column[]   =   (isset($form_builder_item->column) && $form_builder_item->column) ? 'col-' . 12/$form_builder_item->column : 'col-12';
 
-                echo '<div class="'.implode(' ', $column).' mb-3">';
+                echo '<div class="'.implode(' ', $column).' uk-form-controls mb-3">';
                 if ($form_builder_item->field_label) {
-                    echo '<label class="form-label uk-form-label" for="tzportfolio-form-builder-'.$form_builder_item->field_name.'">'.$form_builder_item->field_label.($form_builder_item->field_required == 1 ? ' <span class="text-danger">*</span>' : '').'</label>';
+                    echo '<label class="uk-form-label" for="tzportfolio-form-builder-'.$form_builder_item->field_name.'">'.$form_builder_item->field_label.($form_builder_item->field_required == 1 ? ' <span class="text-danger">*</span>' : '').'</label>';
                 }
                 $required   =   $form_builder_item->field_required == 1 ? ' required' : '';
                 switch ($form_builder_item->type) {
                     case 'text':
-                        echo '<input id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 form-control" type="text" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'"'.$required.' />';
+                        echo '<input id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 uk-input" type="text" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'"'.$required.' />';
                         break;
                     case 'email':
-                        echo '<input id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 form-control" type="email" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'"'.$required.' />';
+                        echo '<input id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 uk-input" type="email" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'"'.$required.' />';
                         break;
                     case 'phone':
-                        echo '<input id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 form-control" type="phone" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'"'.$required.' />';
+                        echo '<input id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 uk-input" type="phone" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'"'.$required.' />';
                         break;
                     case 'textarea':
-                        echo '<textarea id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 form-control" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'" rows="5"'.$required.'></textarea>';
+                        echo '<textarea id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 uk-textarea" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']" placeholder="'.$form_builder_item->field_placeholder.'" rows="5"'.$required.'></textarea>';
                         break;
                     case 'select':
-                        echo '<select id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 form-select" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']"'.$required.'>';
+                        echo '<select id="tzportfolio-form-builder-'.$form_builder_item->field_name.'" class="w-100 uk-select" name="tzportfolio-form-builder-['.$form_builder_item->field_name.']"'.$required.'>';
                         foreach ($form_builder_item->field_options as $key_opt => $field_option) {
                             $selected   =   $field_option->opt_required == 1 ? ' selected' : '';
                             echo '<option value="'.$field_option->opt_value.'"'.$selected.'>'.$field_option->opt_text.'</option>';
@@ -134,25 +136,25 @@ if ($params->get('form_builder_show',1)) {
                 if ($form_builder->captcha_type == 'recaptcha') {
                     PluginHelper::importPlugin('captcha', 'recaptcha');
                     $recaptcha = Factory::getApplication()->triggerEvent('onDisplay', array(null, 'tzportfolio_form_builder_recaptcha' , 'tzportfolio-form-builder-recaptcha'));
-                    echo (isset($recaptcha[0])) ? $recaptcha[0] : '<p class="uk-alert-danger">' . JText::_('TZPORTFOLIO_RECAPTCHA_NOT_INSTALLED') . '</p>';
+                    echo (isset($recaptcha[0])) ? $recaptcha[0] : '<p class="uk-alert-danger">' . \Joomla\CMS\Language\Text::_('TZPORTFOLIO_RECAPTCHA_NOT_INSTALLED') . '</p>';
                 } elseif ($form_builder->captcha_type == 'invisible-recaptcha') {
                     PluginHelper::importPlugin('captcha', 'recaptcha_invisible');
                     $recaptcha = Factory::getApplication()->triggerEvent('onDisplay', array(null, 'tzportfolio_form_builder_invisible_recaptcha' , 'tzportfolio-form-builder-invisible-recaptcha'));
-                    echo (isset($recaptcha[0])) ? $recaptcha[0] : '<p class="uk-alert-danger">' . JText::_('TZPORTFOLIO_RECAPTCHA_NOT_INSTALLED') . '</p>';
+                    echo (isset($recaptcha[0])) ? $recaptcha[0] : '<p class="uk-alert-danger">' . \Joomla\CMS\Language\Text::_('TZPORTFOLIO_RECAPTCHA_NOT_INSTALLED') . '</p>';
                 } else {
                     $value1 =   rand(1,100);
                     $value2 =   rand(1,100);
-                    $mainframe =JFactory::getApplication();
+                    $mainframe =Factory::getApplication();
                     $mainframe->setUserState( "tzportfolio-formbuilder-recaptcha.value1", $value1 );
                     $mainframe->setUserState( "tzportfolio-formbuilder-recaptcha.value2", $value2 );
                     echo '<div class="tzportfolio-formbuilder-recaptcha">'.($value1 . ' + ' . $value2 .' = ?').'</div>';
-                    echo '<div class="tzportfolio-formbuilder-recaptcha-result"><input type="text" name="tzportfolio-form-captcha" class="form-control" placeholder="'.($value1 . ' + ' . $value2 .' = ?').'"></div>';
+                    echo '<div class="tzportfolio-formbuilder-recaptcha-result"><input type="text" name="tzportfolio-form-captcha" class="uk-input" placeholder="'.($value1 . ' + ' . $value2 .' = ?').'"></div>';
                 }
                 echo '<input type="hidden" name="captcha_type" value="'.$form_builder->captcha_type.'">';
                 echo '</div>';
             endif;
-            echo '<input type="hidden" class="token" name="'.\JSession::getFormToken().'" value="1">';
-            echo '<button type="submit" class="tzportfolio-form-builer-submit uk-margin-top '.$form_builder->submit_class.'">Submit</button>';
+            echo '<input type="hidden" class="token" name="'.\Joomla\CMS\Session\Session::getFormToken().'" value="1">';
+            echo '<button type="submit" class="tzportfolio-form-builer-submit uk-margin-top uk-button uk-button-default '.$form_builder->submit_class.'">Submit</button>';
             echo '<div class="tzportfolio-formbuilder-status uk-margin"></div>';
             echo '</form>';
             echo '</div>';
