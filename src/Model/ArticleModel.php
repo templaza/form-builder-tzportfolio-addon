@@ -31,6 +31,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Session\Session;
+use Joomla\Utilities\IpHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnItemModel;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 
@@ -106,8 +107,8 @@ class ArticleModel extends AddOnItemModel {
         $addon  =   $this -> getAddonData();
         $mainframe =Factory::getApplication();
         $tzformbuilder = $mainframe->input->get('tzportfolio-form-builder-', array(), 'RAW');
-        if (!empty(($tzformbuilder)) && isset($addon->value)) {
-            $this->_FormBuilder_Ajax($tzformbuilder, $addon->value);
+        if (!empty(($tzformbuilder)) && !empty($addon->value)) {
+            $this->_FormBuilder_Ajax($tzformbuilder, json_decode($addon->value));
         }
 
         return $addon;
@@ -131,8 +132,11 @@ class ArticleModel extends AddOnItemModel {
             $gcaptcha= '';
 
             foreach ($tzformbuilder as $field => $value) {
-                $message    =   str_replace('{{'.$field.'}}', $value, $message);
-
+                if (is_array($value)) {
+                    $value = implode(', ', $value);
+                }
+                $message        =   str_replace('{{'.$field.'}}', $value, $message);
+                $items->email_headers  =   str_replace('{{'.$field.'}}', $value, $items->email_headers);
                 if ($field == 'g-recaptcha-response') {
                     $gcaptcha = $value;
                 }
@@ -168,7 +172,7 @@ class ArticleModel extends AddOnItemModel {
             }
 
             //get sender UP
-            $senderip       = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+            $senderip       = IpHelper::getIp();
             // Subject Structure
             $site_name 	    = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
             $mail_subject   = $items->email_subject;
@@ -190,10 +194,8 @@ class ArticleModel extends AddOnItemModel {
             $recipient = $config->get( 'mailfrom' );
 
             // $sender = array( $email, $name );
-
             if (!empty($items->from_email)) {
-                $sender = array($items->from_email, $items->from_email);
-                $mail->addReplyTo($items->from_email, $items->from_email);
+                $mail->addReplyTo($items->from_email);
             }
 
             if (!empty($items->recipient_email)) {
@@ -209,7 +211,7 @@ class ArticleModel extends AddOnItemModel {
                     {
                         if (strtolower($_header[0]) == 'reply-to')
                         {
-                            $replyToMail =  isset($_header[1]) ?  trim($_header[1]) : '';
+                            $replyToMail =  isset($_header[1]) ?  trim($_header[1]) : (!empty($items->from_email) ? $items->from_email : '');
                         }
                         if (strtolower($_header[0])  == 'reply-name')
                         {
@@ -228,6 +230,7 @@ class ArticleModel extends AddOnItemModel {
                 if (!empty($replyToMail)) {
                     if (!empty($replyToName)) {
                         $mail->addReplyTo($replyToMail, $replyToName);
+                        $sender = array($replyToMail, $replyToName);
                     } else {
                         $mail->addReplyTo($replyToMail);
                     }
